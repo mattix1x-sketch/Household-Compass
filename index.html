@@ -18,7 +18,6 @@
     --c-blue:   #2196F3;
     --c-red:    #F44336;
 
-    /* Popping vibrant scale colors */
     --sd: #FF2D55;
     --d:  #FF9500;
     --n:  #707E94;
@@ -224,29 +223,31 @@
     font-weight: 700;
   }
 
+  /* FIXED-HEIGHT & AUTO-SCALED BUTTONS */
   .scale{
     display:grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
+    gap: 6px;
+    width: 100%;
   }
   .scale-btn{
     display:flex;
     align-items:center;
     justify-content:center;
     text-align:center;
-    min-height: 66px;
+    height: 64px; /* Rigid uniform height across all 5 buttons */
     border: none;
     border-radius: 4px;
-    padding: 10px 4px;
-    font-size: 0.85rem;
-    line-height: 1.25;
+    padding: 4px 2px;
+    font-size: clamp(0.62rem, 1.8vw, 0.82rem); /* Dynamic text scaling */
+    line-height: 1.15;
     font-weight: 800;
     font-family: inherit;
     cursor:pointer;
     color: #FFFFFF;
-    white-space: normal;
-    word-break: normal;
     hyphens: auto;
+    word-break: normal;
+    overflow: hidden;
     box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
   }
@@ -268,11 +269,10 @@
   .scale-btn.sa{ background: var(--sa); text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
   @media (max-width: 400px){
-    .scale{ gap: 6px; }
-    .scale-btn{ min-height: 68px; font-size: 0.78rem; padding: 8px 2px; }
+    .scale{ gap: 4px; }
+    .scale-btn{ height: 60px; font-size: clamp(0.55rem, 2.5vw, 0.72rem); }
   }
 
-  /* RESULT AND EXPLORER LAYOUT */
   .result-layout {
     display: flex;
     gap: min(5vw, 24px);
@@ -329,7 +329,6 @@
   .quad.bl{ background: var(--c-blue); border-right: 1px solid rgba(0,0,0,0.3); }
   .quad.br{ background: var(--c-red); }
 
-  /* WORRY SLIDER STYLES */
   .worry-slider-container {
     display: flex;
     flex-direction: column;
@@ -413,7 +412,6 @@
   }
   .result-actions{ display:flex; gap: 14px; flex-wrap: wrap; justify-content:center; margin-bottom: 12px; }
 
-  /* EXPLORER SPECIFIC OVERRIDES */
   .interactive-hint {
     font-size: 0.9rem;
     font-weight: 700;
@@ -690,47 +688,47 @@
 
   var currentLang = "en";
 
-  /* 38 Single-Focus Questions */
+  /* 38 Timeless, Age-Agnostic Questions */
   var QUESTIONS = [
     { ax: "s", text:{ en:"I have a strict curfew for coming home.", es:"Tengo un toque de queda estricto para llegar a casa.", fr:"J'ai un couvre-feu strict pour rentrer à la maison.", de:"Ich habe eine strenge Ausgangssperre fürs Nachhausekommen.", ru:"У меня строгий комендантский час для возвращения домой." }},
     { ax: "s", text:{ en:"Breaking a rule has clear consequences.", es:"Romper una regla tiene consecuencias claras.", fr:"Enfreindre une règle a des conséquences claires.", de:"Eine Regel zu brechen, hat klare Konsequenzen.", ru:"Нарушение правила имеет чёткие последствия." }},
     { ax: "s", text:{ en:"I must do my chores without being asked.", es:"Debo hacer mis tareas sin que me lo pidan.", fr:"Je dois faire mes corvées sans qu'on me le demande.", de:"Ich muss meine Aufgaben erledigen, ohne darum gebeten zu werden.", ru:"Я должен выполнять свои обязанности без напоминаний." }},
     { ax: "s", text:{ en:"I have to ask permission to buy something expensive.", es:"Tengo que pedir permiso para comprar algo caro.", fr:"Je dois demander la permission pour acheter quelque chose de cher.", de:"Ich muss um Erlaubnis fragen, wenn ich etwas Teures kaufe.", ru:"Я должен спрашивать разрешения на крупные покупки." }},
-    { ax: "s", text:{ en:"Homework must be done before I can watch TV.", es:"Debo hacer la tarea antes de ver televisión.", fr:"Je dois finir mes devoirs avant de regarder la télévision.", de:"Hausaufgaben müssen erledigt sein, bevor ich fernsehen darf.", ru:"Уроки должны быть сделаны до того, как я смогу посмотреть телевизор." }},
-    { ax: "s", text:{ en:"Swearing is strictly forbidden in my house.", es:"Decir malas palabras está estrictamente prohibido en mi casa.", fr:"Il est strictement interdit de dire des gros mots chez moi.", de:"Fluchen ist in meinem Haus strengstens verboten.", ru:"Ругаться матом у нас дома строго запрещено." }},
+    { ax: "s", text:{ en:"Homework or chores must be finished before free time.", es:"Las tareas o deberes deben terminarse antes del tiempo libre.", fr:"Les devoirs ou corvées doivent être finis avant le temps libre.", de:"Hausaufgaben oder Pflichten müssen vor der Freizeit erledigt sein.", ru:"Уроки или обязанности должны быть сделаны до свободного времени." }},
+    { ax: "s", text:{ en:"Swearing or bad language is strictly forbidden in my house.", es:"Decir malas palabras está estrictamente prohibido en mi casa.", fr:"Il est strictly interdit de dire des gros mots chez moi.", de:"Fluchen oder schlechte Sprache ist strengstens verboten.", ru:"Ругательства у нас дома строго запрещены." }},
     { ax: "s", text:{ en:"I need permission to go to a friend's house.", es:"Necesito permiso para ir a casa de un amigo.", fr:"J'ai besoin de permission pour aller chez un ami.", de:"Ich brauche Erlaubnis, um zu einem Freund zu gehen.", ru:"Мне нужно разрешение, чтобы пойти к другу." }},
-    { ax: "s", text:{ en:"My video game time is strictly limited.", es:"Mi tiempo de videojuegos está estrictamente limitado.", fr:"Mon temps de jeu vidéo est strictement limité.", de:"Meine Zeit für Videospiele ist streng begrenzt.", ru:"Моё время на видеоигры строго ограничено." }},
+    { ax: "s", text:{ en:"My entertainment or playtime is strictly limited.", es:"Mi tiempo de juego o entretenimiento está estrictamente limitado.", fr:"Mon temps de jeu ou de divertissement est strictement limité.", de:"Meine Spiel- oder Unterhaltungszeit ist streng begrenzt.", ru:"Моё время на игры или развлечения строго ограничено." }},
     { ax: "s", text:{ en:"My parents have strict rules about what clothes I can wear.", es:"Mis padres tienen reglas estrictas sobre mi ropa.", fr:"Mes parents ont des règles strictes sur les vêtements que je peux porter.", de:"Meine Eltern haben strenge Regeln, welche Kleidung ich tragen darf.", ru:"У родителей строгие правила насчёт того, какую одежду я могу носить." }},
     { ax: "s", text:{ en:"I am never allowed to stay out past midnight.", es:"Nunca se me permite estar fuera después de la medianoche.", fr:"Je ne suis jamais autorisé à sortir après minuit.", de:"Es ist mir nie erlaubt, nach Mitternacht draußen zu bleiben.", ru:"Мне никогда не разрешают оставаться гулять после полуночи." }},
-    { ax: "s", text:{ en:"Dating is strictly regulated in my house.", es:"Las citas están estrictamente reguladas en mi casa.", fr:"Les sorties amoureuses sont strictement réglementées chez moi.", de:"Dating ist in meinem Zuhause streng geregelt.", ru:"Свидания в нашей семье строго регламентированы." }},
+    { ax: "s", text:{ en:"Dating or personal relationships are strictly regulated in my house.", es:"Las citas o relaciones personales están estrictamente reguladas.", fr:"Les sorties amoureuses sont strictly réglementées chez moi.", de:"Dating oder persönliche Beziehungen sind streng geregelt.", ru:"Свидания и личные отношения строго регламентированы." }},
     { ax: "s", text:{ en:"I need permission days in advance for a sleepover.", es:"Necesito permiso con días de anticipación para quedarme a dormir.", fr:"J'ai besoin d'une permission plusieurs jours à l'avance pour dormir chez quelqu'un.", de:"Für eine Übernachtung brauche ich Tage im Voraus Erlaubnis.", ru:"Для ночёвки у друзей мне нужно разрешение за несколько дней." }},
     { ax: "s", text:{ en:"I must eat what is served for dinner without complaining.", es:"Debo comer lo que sirven para cenar sin quejarme.", fr:"Je dois manger ce qui est servi au dîner sans me plaindre.", de:"Ich muss ohne zu meckern essen, was es zum Abendessen gibt.", ru:"Я должен есть то, что подают на ужин, без жалоб." }},
     
-    { ax: "v", text:{ en:"My parents read my text messages.", es:"Mis padres leen mis mensajes de texto.", fr:"Mes parents lisent mes SMS.", de:"Meine Eltern lesen meine Textnachrichten.", ru:"Мои родители читают мои сообщения." }},
-    { ax: "v", text:{ en:"My parents track my location using my phone.", es:"Mis padres rastrean mi ubicación usando mi teléfono.", fr:"Mes parents suivent ma position avec mon téléphone.", de:"Meine Eltern verfolgen meinen Standort über mein Handy.", ru:"Мои родители отслеживают моё местоположение по телефону." }},
-    { ax: "v", text:{ en:"My parents know my social media passwords.", es:"Mis padres conocen mis contraseñas de redes sociales.", fr:"Mes parents connaissent mes mots de passe sur les réseaux sociaux.", de:"Meine Eltern kennen meine Social-Media-Passwörter.", ru:"Мои родители знают пароли от моих соцсетей." }},
+    { ax: "v", text:{ en:"My parents looked through my personal notes, letters, or diary.", es:"Mis padres revisaban mis notas personales, cartas o diario.", fr:"Mes parents lisaient mes notes personnelles, courriers ou journal intime.", de:"Meine Eltern durchsuchten meine persönlichen Notizen, Briefe oder Tagebücher.", ru:"Мои родители просматривали мои личные записи, письма или дневник." }},
+    { ax: "v", text:{ en:"My parents always demanded to know my exact location when I went out.", es:"Mis padres siempre exigían saber mi ubicación exacta cuando salía.", fr:"Mes parents exigeaient toujours de savoir exactement où j'étais quand je sortais.", de:"Meine Eltern verlangten immer zu wissen, wo genau ich war, wenn ich ausging.", ru:"Мои родители всегда требовали знать моё точное местонахождение, когда я уходил." }},
+    { ax: "v", text:{ en:"My parents kept close tabs on who I was talking to.", es:"Mis padres vigilaban de cerca con quién hablaba.", fr:"Mes parents surveillaient de près avec qui je discutais.", de:"Meine Eltern passten genau auf, mit wem ich mich unterhielt.", ru:"Мои родители внимательно следили за тем, с кем я общался." }},
     { ax: "v", text:{ en:"My parents must meet my friends before we hang out.", es:"Mis padres deben conocer a mis amigos antes de que salgamos.", fr:"Mes parents doivent rencontrer mes amis avant qu'on sorte.", de:"Meine Eltern müssen meine Freunde kennenlernen, bevor wir uns treffen.", ru:"Мои родители должны познакомиться с моими друзьями до нашей прогулки." }},
-    { ax: "v", text:{ en:"My parents check my school grades online every week.", es:"Mis padres revisan mis calificaciones en línea cada semana.", fr:"Mes parents vérifient mes notes en ligne chaque semaine.", de:"Meine Eltern überprüfen jede Woche meine Noten online.", ru:"Мои родители каждую неделю проверяют мои оценки в интернете." }},
-    { ax: "v", text:{ en:"I must text my parents the moment I arrive anywhere.", es:"Debo enviar un mensaje a mis padres apenas llegue a cualquier lugar.", fr:"Je dois envoyer un message à mes parents dès que j'arrive quelque part.", de:"Ich muss meinen Eltern schreiben, sobald ich irgendwo ankomme.", ru:"Я должен писать родителям сразу же, как куда-то прихожу." }},
-    { ax: "v", text:{ en:"My parents check my internet search history.", es:"Mis padres revisan mi historial de búsqueda en internet.", fr:"Mes parents vérifient mon historique de recherche internet.", de:"Meine Eltern überprüfen meinen Suchverlauf im Internet.", ru:"Мои родители проверяют мою историю поиска в интернете." }},
+    { ax: "v", text:{ en:"My parents regularly checked my school report cards and progress.", es:"Mis padres revisaban regularmente mis boletines escolares y progresos.", fr:"Mes parents vérifiient régulièrement mes bulletins scolaires et mes progrès.", de:"Meine Eltern überprüften regelmäßig meine Zeugnisse und Fortschritte.", ru:"Мои родители регулярно проверяли мои школьные оценки и успеваемость." }},
+    { ax: "v", text:{ en:"I had to call or check in as soon as I arrived anywhere.", es:"Tenía que llamar o avisar tan pronto como llegaba a cualquier lugar.", fr:"Je devais appeler ou donner des nouvelles dès mon arrivée quelque part.", de:"Ich musste mich sofort melden oder anrufen, sobald ich irgendwo ankam.", ru:"Я должен был сразу звонить или сообщаться, как только куда-то приходил." }},
+    { ax: "v", text:{ en:"My parents checked through my personal belongings without asking.", es:"Mis padres revisaban mis pertenencias personales sin preguntar.", fr:"Mes parents fouillaient mes affaires personnelles sans demander.", de:"Meine Eltern durchsuchten meine persönlichen Sachen ohne zu fragen.", ru:"Мои родители проверяли мои личные вещи без спроса." }},
     { ax: "v", text:{ en:"My parents need a list of everyone attending a party before I can go.", es:"Mis padres necesitan la lista de invitados a una fiesta antes de ir.", fr:"Mes parents veulent la liste des invités d'une fête avant que j'y aille.", de:"Meine Eltern brauchen eine Gästeliste der Party, bevor ich gehen darf.", ru:"Родителям нужен список всех гостей на вечеринке, прежде чем меня отпустят." }},
-    { ax: "v", text:{ en:"My parents search my bedroom.", es:"Mis padres revisan mi habitación.", fr:"Mes parents fouillent ma chambre.", de:"Meine Eltern durchsuchen mein Zimmer.", ru:"Мои родители обыскивают мою комнату." }},
-    { ax: "v", text:{ en:"My parents listen to my phone conversations.", es:"Mis padres escuchan mis conversaciones telefónicas.", fr:"Mes parents écoutent mes conversations téléphoniques.", de:"Meine Eltern hören bei meinen Telefongesprächen zu.", ru:"Мои родители слушают мои телефонные разговоры." }},
-    { ax: "v", text:{ en:"I am required to keep my bedroom door open.", es:"Estoy obligado a mantener la puerta de mi cuarto abierta.", fr:"Je suis obligé de garder la porte de ma chambre ouverte.", de:"Ich muss meine Zimmertür offen lassen.", ru:"Я обязан держать дверь в свою комнату открытой." }},
-    { ax: "v", text:{ en:"My parents actively monitor my social media posts.", es:"Mis padres monitorean activamente mis publicaciones.", fr:"Mes parents surveillent activement mes publications sur les réseaux sociaux.", de:"Meine Eltern überwachen aktiv meine Social-Media-Posts.", ru:"Мои родители активно следят за моими постами в соцсетях." }},
-    { ax: "v", text:{ en:"My parents demand to know my exact schedule for the day.", es:"Mis padres exigen saber mi horario exacto del día.", fr:"Mes parents exigent de connaître mon emploi du temps exact pour la journée.", de:"Meine Eltern wollen meinen genauen Tagesablauf wissen.", ru:"Мои родители требуют знать моё точное расписание на день." }},
+    { ax: "v", text:{ en:"My parents searched through my bedroom or personal space.", es:"Mis padres revisaban mi habitación o mi espacio personal.", fr:"Mes parents fouillaient ma chambre ou mon espace personnel.", de:"Meine Eltern durchsuchten mein Zimmer oder meinen persönlichen Bereich.", ru:"Мои родители обыскивали мою комнату или личное пространство." }},
+    { ax: "v", text:{ en:"My parents listened in on my phone or private conversations.", es:"Mis padres escuchaban mis llamadas o conversaciones privadas.", fr:"Mes parents écoutaient mes appels ou conversations privées.", de:"Meine Eltern hörten bei meinen Telefonaten oder privaten Gesprächen zu.", ru:"Мои родители подслушивали мои телефонные или личные разговоры." }},
+    { ax: "v", text:{ en:"I am required to keep my bedroom door open or unlocked.", es:"Estoy obligado a mantener la puerta de mi cuarto abierta o sin seguro.", fr:"Je suis obligé de garder la porte de ma chambre ouverte ou non verrouillée.", de:"Ich muss meine Zimmertür offen oder unverschlossen lassen.", ru:"Я обязан держать дверь в свою комнату открытой или незапертой." }},
+    { ax: "v", text:{ en:"My parents actively monitored what movies, books, or media I consumed.", es:"Mis padres monitoreaban activamente qué películas, libros o medios consumía.", fr:"Mes parents surveillaient de près les films, livres ou médias que je consommais.", de:"Meine Eltern überwachten aktiv, welche Filme, Bücher oder Medien ich konsumierte.", ru:"Мои родители активно контролировали, какие фильмы, книги или материалы я смотрел." }},
+    { ax: "v", text:{ en:"My parents demanded to know my exact schedule for the day.", es:"Mis padres exigen saber mi horario exacto del día.", fr:"Mes parents exigent de connaître mon emploi du temps exact pour la journée.", de:"Meine Eltern wollen meinen genauen Tagesablauf wissen.", ru:"Мои родители требуют знать моё точное расписание на день." }},
 
-    { ax: "w", text:{ en:"I have to wear a helmet when riding a bike.", es:"Tengo que usar casco al andar en bicicleta.", fr:"Je dois porter un casque quand je fais du vélo.", de:"Ich muss beim Fahrradfahren einen Helm tragen.", ru:"Я должен носить шлем при езде на велосипеде." }},
-    { ax: "w", text:{ en:"My parents panic if I don't answer my phone immediately.", es:"Mis padres entran en pánico si no contesto el teléfono de inmediato.", fr:"Mes parents paniquent si je ne réponds pas au téléphone tout de suite.", de:"Meine Eltern geraten in Panik, wenn ich nicht sofort ans Telefon gehe.", ru:"Мои родители паникуют, если я не отвечаю на телефон сразу." }},
-    { ax: "w", text:{ en:"My parents forbid me from trying dangerous sports.", es:"Mis padres me prohíben intentar deportes peligrosos.", fr:"Mes parents m'interdisent d'essayer des sports dangereux.", de:"Meine Eltern verbieten mir, gefährliche Sportarten auszuprobieren.", ru:"Мои родители запрещают мне пробовать опасные виды спорта." }},
+    { ax: "w", text:{ en:"I have to wear protective gear (like a helmet) when riding a bike.", es:"Tengo que usar equipo de protección al andar en bicicleta.", fr:"Je dois porter un équipement de protection en faisant du vélo.", de:"Ich muss beim Fahrradfahren Schutzkleidung tragen.", ru:"Я должен надевать защитную экипировку при езде на велосипеде." }},
+    { ax: "w", text:{ en:"My parents panicked if I was even a little late coming home.", es:"Mis padres entraban en pánico si llegaba un poco tarde a casa.", fr:"Mes parents paniquaient si j'avais le moindre retard en rentrant.", de:"Meine Eltern gerieten in Panik, wenn ich auch nur etwas zu spät nach Hause kam.", ru:"Мои родители паниковали, если я хоть немного опаздывал домой." }},
+    { ax: "w", text:{ en:"My parents forbid me from trying dangerous or rough sports.", es:"Mis padres me prohíben intentar deportes peligrosos o bruscos.", fr:"Mes parents m'interdisent d'essayer des sports dangereux ou violents.", de:"Meine Eltern verbieten mir, gefährliche oder wilde Sportarten auszuprobieren.", ru:"Мои родители запрещают мне пробовать опасные или травматичные виды спорта." }},
     { ax: "w", text:{ en:"My parents worry if I walk around my own neighborhood.", es:"Mis padres se preocupan si camino por mi propio vecindario.", fr:"Mes parents s'inquiètent si je me promène dans mon propre quartier.", de:"Meine Eltern machen sich Sorgen, wenn ich in meiner eigenen Nachbarschaft spazieren gehe.", ru:"Мои родители волнуются, если я гуляю по нашему району." }},
     { ax: "w", text:{ en:"My parents prefer I stay indoors for safety.", es:"Mis padres prefieren que me quede adentro por seguridad.", fr:"Mes parents préfèrent que je reste à l'intérieur pour plus de sécurité.", de:"Meine Eltern ziehen es vor, dass ich zur Sicherheit drinnen bleibe.", ru:"Родители предпочитают, чтобы ради безопасности я оставался дома." }},
-    { ax: "w", text:{ en:"My parents frequently warn me about strangers.", es:"Mis padres me advierten con frecuencia sobre los extraños.", fr:"Mes parents me mettent souvent en garde contre les inconnus.", de:"Meine Eltern warnen mich häufig vor Fremden.", ru:"Родители часто предупреждают меня о незнакомцах." }},
-    { ax: "w", inv: true, text:{ en:"My parents let me climb trees without stressing.", es:"Mis padres me dejan trepar árboles sin estresarse.", fr:"Mes parents me laissent grimper aux arbres sans stresser.", de:"Meine Eltern lassen mich ohne Stress auf Bäume klettern.", ru:"Родители разрешают мне лазить по деревьям без лишнего стресса." }},
-    { ax: "w", inv: true, text:{ en:"I can walk to the local store by myself without my parents worrying.", es:"Puedo caminar a la tienda solo sin que mis padres se preocupen.", fr:"Je peux aller au magasin seul sans que mes parents s'inquiètent.", de:"Ich kann alleine zum Laden gehen, ohne dass meine Eltern sich Sorgen machen.", ru:"Я могу один сходить в местный магазин без родительских волнений." }},
-    { ax: "w", text:{ en:"My parents insist on driving me because walking is unsafe.", es:"Mis padres insisten en llevarme porque caminar es inseguro.", fr:"Mes parents insistent pour me conduire car marcher est dangereux.", de:"Meine Eltern bestehen darauf, mich zu fahren, weil Gehen unsicher ist.", ru:"Родители настаивают на том, чтобы подвезти меня, потому что ходить пешком небезопасно." }},
+    { ax: "w", text:{ en:"My parents frequently warn me about dangers from strangers.", es:"Mis padres me advierten con frecuencia sobre los peligros de los extraños.", fr:"Mes parents me mettent souvent en garde contre les inconnus.", de:"Meine Eltern warnen mich häufig vor Fremden.", ru:"Родители часто предупреждают меня об опасности от незнакомцев." }},
+    { ax: "w", inv: true, text:{ en:"My parents let me climb trees or play freely outdoors without stressing.", es:"Mis padres me dejan trepar árboles o jugar afueras sin estresarse.", fr:"Mes parents me laissent grimper aux arbres ou jouer dehors sans stresser.", de:"Meine Eltern lassen mich ohne Stress auf Bäume klettern oder draußen spielen.", ru:"Родители разрешают мне лазить по деревьям и играть на улице без лишнего стресса." }},
+    { ax: "w", inv: true, text:{ en:"I can walk to a local store by myself without my parents worrying.", es:"Puedo caminar a la tienda solo sin que mis padres se preocupen.", fr:"Je peux aller au magasin seul sans que mes parents s'inquiètent.", de:"Ich kann alleine zum Laden gehen, ohne dass meine Eltern sich Sorgen machen.", ru:"Я могу один сходить в местный магазин без родительских волнений." }},
+    { ax: "w", text:{ en:"My parents insist on driving me because walking alone is unsafe.", es:"Mis padres insisten en llevarme porque caminar solo es inseguro.", fr:"Mes parents insistent pour me conduire car marcher seul est dangereux.", de:"Meine Eltern bestehen darauf, mich zu fahren, weil alleine Gehen unsicher ist.", ru:"Родители настаивают на том, чтобы подвезти меня, потому что ходить одному небезопасно." }},
     { ax: "w", inv: true, text:{ en:"My parents stay calm if my plans suddenly change.", es:"Mis padres se mantienen tranquilos si mis planes cambian de repente.", fr:"Mes parents restent calmes si mes plans changent soudainement.", de:"Meine Eltern bleiben ruhig, wenn sich meine Pläne plötzlich ändern.", ru:"Родители остаются спокойными, если мои планы внезапно меняются." }},
-    { ax: "w", text:{ en:"My parents constantly remind me to 'be careful' when I leave.", es:"Mis padres constantemente me recuerdan 'tener cuidado' cuando salgo.", fr:"Mes parents me rappellent constamment de 'faire attention' quand je sors.", de:"Meine Eltern erinnern mich ständig daran, 'vorsichtig zu sein', wenn ich gehe.", ru:"Родители постоянно напоминают мне 'быть осторожным' при выходе из дома." }},
+    { ax: "w", text:{ en:"My parents constantly remind me to 'be careful' whenever I leave.", es:"Mis padres constantemente me recuerdan 'tener cuidado' cuando salgo.", fr:"Mes parents me rappellent constamment de 'faire attention' quand je sors.", de:"Meine Eltern erinnern mich ständig daran, 'vorsichtig zu sein', wenn ich gehe.", ru:"Родители постоянно напоминают мне 'быть осторожным' при выходе из дома." }},
     { ax: "w", inv: true, text:{ en:"My parents don't worry about minor scrapes and bruises.", es:"Mis padres no se preocupan por pequeños rasguños y moretones.", fr:"Mes parents ne s'inquiètent pas pour de petites égratignures ou bleus.", de:"Meine Eltern machen sich keine Sorgen über kleine Kratzer und blaue Flecke.", ru:"Родители не беспокоятся из-за мелких царапин и синяков." }}
   ];
 
@@ -804,7 +802,6 @@
     document.getElementById('nav-menu').textContent = s.menu;
     document.getElementById('btn-explorer-back').textContent = s.exploreBack;
     
-    // Result screen axes
     document.getElementById('res-axis-relaxed').textContent = s.axisRelaxed;
     document.getElementById('res-axis-strict').textContent = s.axisStrict;
     document.getElementById('res-axis-trust').textContent = s.axisTrust;
@@ -813,7 +810,6 @@
     document.getElementById('res-label-relaxed-slider').textContent = s.labelRelaxedSlider;
     document.getElementById('res-label-unconcerned').textContent = s.labelUnconcerned;
 
-    // Explorer screen axes
     document.getElementById('exp-axis-relaxed').textContent = s.axisRelaxed;
     document.getElementById('exp-axis-strict').textContent = s.axisStrict;
     document.getElementById('exp-axis-trust').textContent = s.axisTrust;
@@ -1018,7 +1014,6 @@
     }, 2200);
   }
 
-  /* INTERACTIVE EXPLORER LOGIC */
   var expX = 50, expY = 50, expW = 50;
 
   function forceExplorerUpdate(){
@@ -1063,21 +1058,19 @@
     });
   }
 
-  // Two-way binding for grid & worry slider
   setupDraggableArea(document.getElementById('explorer-grid-frame'), false, function(x, y){
     expX = x; 
     expY = y;
-    expW = 100 - expX; // Grid X (Supervision) drives the Worry marker
+    expW = 100 - expX;
     forceExplorerUpdate();
   });
 
   setupDraggableArea(document.getElementById('explorer-worry-track'), true, function(x, y){
     expW = y;
-    expX = 100 - expW; // Worry marker drives Grid X (Supervision)
+    expX = 100 - expW;
     forceExplorerUpdate();
   });
 
-  // Event Listeners
   var langButtons = document.querySelectorAll('.lang-btn');
   for(var i=0;i<langButtons.length;i++){
     langButtons[i].addEventListener('click', function(){
